@@ -15,19 +15,22 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/reminders", reminderRoutes);
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.json({
+    message:
+      "Use /api/reminders to send and get reminders. - get/post",
+  });
 });
 
 // connect to MongoDB & start server
 mongoose
-    .connect(process.env.MONGODB_KEY)
-    .then(() => {
-        console.log("Connected to MongoDB!");
+  .connect(process.env.MONGODB_KEY)
+  .then(() => {
+    console.log("Connected to MongoDB!");
 
-        // schedule unsent reminders on startup
-        scheduleUnsentReminders();
+    // schedule unsent reminders on startup
+    scheduleUnsentReminders();
 
-        const port = process.env.PORT || 8080;
-        app.listen(port, () => console.log(`Server running on port ${port}`));
-    })
-    .catch((err) => console.error("Err connecting to DB", err));
+    const port = process.env.PORT || 8080;
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+  })
+  .catch((err) => console.error("Err connecting to DB", err));
