@@ -17,7 +17,7 @@ app.use("/api/reminders", reminderRoutes);
 app.get("/", (req, res) => {
   res.json({
     message:
-      "Use /api/reminders to send and get reminders. - get/post",
+      "use /api/reminders to send and get reminders. - get/post",
   });
 });
 
