@@ -28,19 +28,9 @@ const googleAuthCallback = async (req, res) => {
     const { code } = req.query;
     try {
         const { tokens } = await oauth2Client.getToken(code);
-        console.log("Tokens received:", tokens);
-        
-        if (!tokens.id_token) {
-            throw new Error("ID token not received");
-        }
 
         // decode id_token to get user info
         const decoded = jwt.decode(tokens.id_token);
-        console.log("Decoded token:", decoded);
-
-        if (!decoded) {
-            throw new Error("Failed to decode ID token");
-        }
 
         const googleId = decoded.sub;
         const email = decoded.email;
@@ -63,7 +53,7 @@ const googleAuthCallback = async (req, res) => {
         await user.save();
 
         // generate access token
-        const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.EXPIRY_TIME });
 
         res.json({ message: "Authentication successful!", accessToken });
     } catch (error) {

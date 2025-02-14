@@ -64,6 +64,6 @@ const createCalendarEvent = async (req, res) => {
 
 
 module.exports = { 
-    getCalendarEvents, 
-    createCalendarEvent 
+    getCalendarEvents,
+    createCalendarEvent
 };
