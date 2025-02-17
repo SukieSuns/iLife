@@ -5,6 +5,7 @@ const session = require("express-session");
 const reminderRoutes = require("./routes/reminder.route.js");
 const calenderRoutes = require("./routes/calender.route.js");
 const authRoutes = require("./routes/auth.route.js");
+const aiChatRoutes = require("./routes/aichat.route.js");
 const { scheduleUnsentReminders } = require("./utils/scheduler.js");
 
 const app = express();
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 app.use("/api/reminders", reminderRoutes);
 app.use("/api/calender", calenderRoutes);
 app.use("/auth", authRoutes);
+app.use("/api", aiChatRoutes);
 
 app.get("/", (req, res) => {
   res.json({
