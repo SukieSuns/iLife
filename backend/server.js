@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/api/reminders", reminderRoutes);
-app.use("/api/calender", calenderRoutes);
+app.use("/api/calendar", calenderRoutes);
 app.use("/auth", authRoutes);
 app.use("/api", aiChatRoutes);
 

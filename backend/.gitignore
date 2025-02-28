@@ -1,5 +1,4 @@
 /node_modules
 /public/
+/tools/
 .env
-credentials.json
-credentials0.json
