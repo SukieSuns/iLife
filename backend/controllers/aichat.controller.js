@@ -167,7 +167,7 @@ const chatGemini = async (req, res) => {
 
     try {
       const calendarResponse = await axios.post(
-        "http://localhost:3000/api/calendar",
+        "http://localhost:3000/api/calendar/events",
         { ...jsonResponse, userId: googleId },
         {
           headers: {

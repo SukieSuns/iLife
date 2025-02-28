@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const reminderRoutes = require("./routes/reminder.route.js");
-const calenderRoutes = require("./routes/calender.route.js");
+const calendarRoutes = require("./routes/calendar.route.js");
 const authRoutes = require("./routes/auth.route.js");
 const aiChatRoutes = require("./routes/aichat.route.js");
 const { scheduleUnsentReminders } = require("./utils/scheduler.js");
@@ -28,9 +28,9 @@ app.use((req, res, next) => {
 
 // routes
 app.use("/api/reminders", reminderRoutes);
-app.use("/api/calendar", calenderRoutes);
-app.use("/auth", authRoutes);
-app.use("/api", aiChatRoutes);
+app.use("/api/calendar", calendarRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/chat", aiChatRoutes);
 
 app.get("/", (req, res) => {
   res.json({

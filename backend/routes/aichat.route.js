@@ -3,7 +3,7 @@ const { chatGemini, getChatHistory } = require("../controllers/aichat.controller
 
 const router = express.Router();
 
-router.post("/chat", chatGemini);
-router.get("/chat/:googleId", getChatHistory);
+router.post("/", chatGemini);
+router.get("/:googleId", getChatHistory);
 
 module.exports = router;
