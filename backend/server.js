@@ -35,7 +35,7 @@ app.use("/api/chat", aiChatRoutes);
 app.get("/", (req, res) => {
   res.json({
     message:
-      "use /api/reminders to send and get reminders. - get/post",
+      "hello world",
   });
 });
 

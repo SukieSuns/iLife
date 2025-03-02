@@ -179,6 +179,28 @@ const chatGemini = async (req, res) => {
 
       console.log("Reminder created!", calendarResponse.data);
 
+      const eventDateTime = new Date(jsonResponse.startTime);
+      const formattedDateTime = eventDateTime.toLocaleString ("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      });
+     
+      const friendlyResponses = [
+      `Got it! I’ll remind you about '${jsonResponse.summary}' on ${formattedDateTime}${jsonResponse.location ? ` at ${jsonResponse.location}` : ''}. Anything else you need?`,
+      `Sweet! Your '${jsonResponse.summary}' is set for ${formattedDateTime}${jsonResponse.location ? ` in ${jsonResponse.location}` : ''}. What’s next on your list?`,
+      `All set! '${jsonResponse.summary}' is good to go for ${formattedDateTime}${jsonResponse.location ? ` at ${jsonResponse.location}` : ''}. Let me know if you want anything else!`,
+      `Nice one! I’ve got '${jsonResponse.summary}' locked in for ${formattedDateTime}${jsonResponse.location ? ` at ${jsonResponse.location}` : ''}. Hope it goes great!`,
+      `Hey, your '${jsonResponse.summary}' is sorted for ${formattedDateTime}${jsonResponse.location ? ` in ${jsonResponse.location}` : ''}. Anything else I can help with?`,
+      `Done! '${jsonResponse.summary}' is on the calendar for ${formattedDateTime}${jsonResponse.location ? ` at ${jsonResponse.location}` : ''}. Let me know how it goes!`,
+      `Your '${jsonResponse.summary}' is ready for ${formattedDateTime}${jsonResponse.location ? ` at ${jsonResponse.location}` : ''}. I’m here if you need me!`,
+      `Cool, I’ve set '${jsonResponse.summary}' for ${formattedDateTime}${jsonResponse.location ? ` in ${jsonResponse.location}` : ''}. What else can I do for you?`
+      ];
+      const successMessage = friendlyResponses[Math.floor(Math.random() * friendlyResponses.length)];
+      
       await Chat.create({
         googleId,
         sessionId: session,
@@ -189,12 +211,11 @@ const chatGemini = async (req, res) => {
         googleId,
         sessionId: session,
         sender: "ai",
-        message:
-          "Your reminder has been added to your calendar! Anything else I can do for you?",
+        message: successMessage,
       });
 
       res.json({
-        response: "Your reminder has been added to your calendar!",
+        response: successMessage,
         sessionId: session,
         eventLink: calendarResponse.data.eventLink,
       });
