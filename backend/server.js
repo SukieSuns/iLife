@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 // connect to MongoDB & start server
 mongoose
   .connect(process.env.MONGODB_KEY)
-  .then(() => {
+  .then(() => { 
     console.log("Connected to MongoDB!");
 
     // schedule unsent reminders on startup

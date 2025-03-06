@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     name: { type: String },
     refreshToken: { type: String, required: true },
+    timeZone: { type: String, default: "UTC" },
     createdAt: { type: Date, default: Date.now }
 });
 

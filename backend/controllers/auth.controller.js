@@ -45,6 +45,9 @@ const googleAuthCallback = async (req, res) => {
     const email = decoded.email;
     const name = decoded.name;
 
+    const stateObjs = JSON.parse(decodeURIComponent(state));
+    const timeZone = stateObjs.timeZone;
+
     // save user to DB
     let user = await User.findOne({ googleId });
 
@@ -54,9 +57,11 @@ const googleAuthCallback = async (req, res) => {
         email,
         name,
         refreshToken: tokens.refresh_token,
+        timeZone,
       });
     } else {
       user.refreshToken = tokens.refresh_token;
+      user.timeZone = timeZone;
     }
 
     await user.save();
@@ -67,7 +72,7 @@ const googleAuthCallback = async (req, res) => {
     });
 
     // testing purpose: get previous url-state
-    const redirectUri = decodeURIComponent(state);
+    const redirectUri = stateObjs.redirectUri;
 
     res.redirect(
       `${redirectUri}?accessToken=${accessToken}&userEmail=${email}&googleId=${googleId}`
