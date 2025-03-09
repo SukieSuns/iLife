@@ -1,6 +1,7 @@
 const axios = require("axios");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Chat = require("../models/chat.model.js");
+const User = require("../models/user.model.js");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -10,6 +11,9 @@ const chatGemini = async (req, res) => {
   if (!prompt || !googleId) {
     return res.status(400).json({ error: "required fields missing" });
   }
+
+  const user = await User.findOne({ googleId }) || { timeZone: "UTC" };
+  const userTimeZone = user.timeZone;
 
   const systemInstructions = `
   You are iLife AI, a helpful assistant. Always refer to yourself as iLife AI.
@@ -187,6 +191,7 @@ const chatGemini = async (req, res) => {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
+      timeZone: userTimeZone,
       });
      
       const friendlyResponses = [

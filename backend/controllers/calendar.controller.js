@@ -40,13 +40,18 @@ const createCalendarEvent = async (req, res) => {
   try {
     const userId = req.userId || req.body.userId;
     if (!userId) throw new Error("User ID is required");
+
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+    const userTimeZone = user.timeZone || "UTC";
+
     const oauth2Client = await getAuthenticatedClient(userId);
 
     const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 
     const { summary, description, location, startTime, endTime } = req.body;
 
-    // validate startTime &
+    // validate startTime & endtime
     if (!startTime || isNaN(Date.parse(startTime))) {
       throw new Error(
         "Invalid startTime: Must be a valid ISO 8601 date (e.g., '2025-02-28T14:00:00.000Z')"
@@ -65,8 +70,8 @@ const createCalendarEvent = async (req, res) => {
       summary,
       description,
       location,
-      start: { dateTime: startTime, timeZone: "America/Los_Angeles" },
-      end: { dateTime: endDateTime, timeZone: "America/Los_Angeles" },
+      start: { dateTime: startTime, timeZone: userTimeZone },
+      end: { dateTime: endDateTime, timeZone: userTimeZone },
     };
 
     const response = await calendar.events.insert({

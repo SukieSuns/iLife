@@ -15,6 +15,7 @@ const oauth2Client = new google.auth.OAuth2(
 // Google OAuth
 const googleAuth = (req, res) => {
   const redirectUri = req.query.redirect_uri;
+  const state = req.query.state || encodeURIComponent(redirectUri);
 
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -25,9 +26,7 @@ const googleAuth = (req, res) => {
       "profile",
     ],
     prompt: "consent",
-
-    // testing purpose only
-    state: encodeURIComponent(redirectUri),
+    state,
   });
   res.redirect(authUrl);
 };
@@ -45,8 +44,14 @@ const googleAuthCallback = async (req, res) => {
     const email = decoded.email;
     const name = decoded.name;
 
-    const stateObjs = JSON.parse(decodeURIComponent(state));
-    const timeZone = stateObjs.timeZone;
+    let stateObj;
+    try {
+      stateObj = JSON.parse(decodeURIComponent(state));
+    } catch (e) {
+      stateObj = { redirectUri: decodeURIComponent(state), timeZone: "UTC" };
+    }
+
+    const timeZone = stateObj.timeZone;
 
     // save user to DB
     let user = await User.findOne({ googleId });
@@ -72,7 +77,7 @@ const googleAuthCallback = async (req, res) => {
     });
 
     // testing purpose: get previous url-state
-    const redirectUri = stateObjs.redirectUri;
+    const redirectUri = stateObj.redirectUri;
 
     res.redirect(
       `${redirectUri}?accessToken=${accessToken}&userEmail=${email}&googleId=${googleId}`
