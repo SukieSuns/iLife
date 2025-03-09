@@ -16,7 +16,6 @@ const oauth2Client = new google.auth.OAuth2(
 const googleAuth = (req, res) => {
   const redirectUri = req.query.redirect_uri;
   const state = req.query.state || encodeURIComponent(redirectUri);
-  console.log("state sent to google:", state);
 
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -44,8 +43,6 @@ const googleAuthCallback = async (req, res) => {
     const googleId = decoded.sub;
     const email = decoded.email;
     const name = decoded.name;
-
-    console.log("state received from google:", state);
 
     let stateObj;
     try {
